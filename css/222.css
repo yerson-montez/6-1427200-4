@@ -1,0 +1,58 @@
+
+        /* Animaciones suaves */
+        * {
+            transition: all 0.3s ease;
+        }
+        
+        /* Efecto hover en imágenes */
+        .product-image {
+            transition: transform 0.4s ease;
+        }
+        .product-image:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Gradiente personalizado */
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        
+        /* Sombras personalizadas */
+        .custom-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Badge animado */
+        .badge-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Botón con efecto */
+        .btn-comprar {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-comprar::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-comprar:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+    
