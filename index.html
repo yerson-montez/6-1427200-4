@@ -23,17 +23,21 @@
                     DS3 Comunicaciones
                 </h1>
                 <p class="text-blue-200 text-sm mt-1">Soluciones profesionales en conectividad</p>
+                <button id="menuBtn" class="md:hidden text-white text-3xl">
+                    ☰
+                </button>
             </div>
             
             <!-- Breadcrumb -->
-            <nav class="hidden md:block text-sm text-blue-100">
-                
-                <a href="index1.html" class="hover:text-white">Inicio</a>
-                <span class="mx-2">/</span>
-                <a href="productos.html" class="hover:text-white">Productos</a>
-                <span class="mx-2">/</span>
+            <nav id="mobileMenu" class="hidden md:block text-sm text-blue-100 mt-4 md:mt-0">
+
+                <span class="hover:text-white"><a href="index1.html">Inicio</a></span>
+                <span class="mx-2 hidden md:inline">/</span>
+                <span class="hover:text-white"><a href="productos.html">Productos</a></span>
+                <span class="mx-2 hidden md:inline">/</span>
                 <span class="text-white font-semibold">AMP 6-1427200-4</span>
             </nav>
+
         </div>
     </div>
 </header>
@@ -495,6 +499,16 @@
 <a href="https://wa.me/51930910949" target="_blank" class="fixed bottom-6 right-6 w-16 h-16 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center text-white text-3xl shadow-2xl hover:scale-110 z-50">
     💬
 </a>
+<!-- scrip para el menu -->
+<script>
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mobileMenu');
+
+    btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+    });
+</script>
+
 
 </body>
 </html>
