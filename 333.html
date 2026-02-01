@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DS3 Comunicaciones - Navbar Mejorado</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      font-family: 'Lexend', sans-serif;
+    }
+    
+    :root {
+      --primary: #0066cc;
+      --primary-dark: #004c99;
+      --accent: #00cc99;
+      --gray-dark: #1a1a2e;
+      --gray-medium: #16213e;
+      --gradient-start: #0066cc;
+      --gradient-end: #00cc99;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    
+    /* Animaciones */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .animate-slide-down {
+      animation: slideDown 0.5s ease-out;
+    }
+    
+    .animate-fade-in {
+      animation: fadeIn 0.3s ease-in;
+    }
+    
+    /* Navbar Principal */
+    .main-navbar {
+      background: linear-gradient(135deg, var(--gray-dark) 0%, var(--gray-medium) 100%);
+      box-shadow: 0 4px 20px rgba(0, 102, 204, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    
+    /* Info Cards */
+    .info-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .info-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 204, 153, 0.2);
+    }
+    
+    .info-card i {
+      color: var(--accent);
+      font-size: 1.1rem;
+    }
+    
+    /* Botones */
+    .btn-search {
+      background: linear-gradient(135deg, var(--accent) 0%, #00aa88 100%);
+      color: white;
+      border-radius: 50px;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 204, 153, 0.3);
+    }
+    
+    .btn-search:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 204, 153, 0.4);
+    }
+    
+    .btn-menu {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(0, 204, 153, 0.5);
+      border-radius: 12px;
+      padding: 0.6rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-menu:hover {
+      background: rgba(0, 204, 153, 0.2);
+      border-color: var(--accent);
+      transform: rotate(90deg);
+    }
+    
+    /* Submenu */
+    .submenu-container {
+      background: white;
+      border-bottom: 3px solid var(--accent);
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .nav-item {
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+    
+    .nav-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 102, 204, 0.2);
+    }
+    
+    .nav-item:hover::before {
+      opacity: 0.1;
+    }
+    
+    .nav-item:hover span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu {
+      background: linear-gradient(180deg, var(--gray-dark) 0%, var(--gray-medium) 100%);
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .mobile-menu-item {
+      border-left: 4px solid transparent;
+      transition: all 0.3s ease;
+      padding: 1rem 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .mobile-menu-item:hover {
+      background: rgba(0, 204, 153, 0.1);
+      border-left-color: var(--accent);
+      padding-left: 2rem;
+    }
+    
+    /* Modal de búsqueda */
+    .search-modal {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    
+    .search-input-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 102, 204, 0.3);
+      overflow: hidden;
+    }
+    
+    .search-input {
+      border: none;
+      outline: none;
+      padding: 1.5rem 2rem;
+      font-size: 1.25rem;
+      width: 100%;
+    }
+    
+    /* Scrollbar personalizado */
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Logo container */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .logo-container:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.02);
+    }
+    
+    /* Mobile info bar */
+    .mobile-info-bar {
+      background: linear-gradient(90deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 204, 153, 0.1) 100%);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+    }
+    
+    /* Cisco GIF container */
+    .cisco-gif-container {
+      background: white;
+      border-radius: 8px;
+      padding: 0.25rem 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .info-card {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR PRINCIPAL -->
+  <nav class="main-navbar animate-slide-down">
+    <div class="container mx-auto px-4">
+      <!-- Desktop Navbar -->
+      <div class="hidden lg:flex justify-between items-center py-4 gap-4">
+        <!-- Logo -->
+        <div class="logo-container">
+          <img
+            src="https://www.ds3comunicaciones.com/mikrotik/images/Logo1.jpg"
+            alt="DS3 Comunicaciones"
+            class="h-14"
+          />
+        </div>
+
+        <!-- Info de contacto -->
+        <div class="flex flex-wrap gap-3 justify-center flex-1">
+          <div class="info-card flex items-center gap-2">
+            <i class="fas fa-phone-alt"></i>
+            <div class="text-white">
+              <p class="text-sm font-semibold">533-4339</p>
+              <p class="text-xs opacity-90">994-428-965</p>
+            </div>
+          </div>
+          
+          <div class="info-card flex items-center gap-2">
+            <i class="fas fa-phone-alt"></i>
+            <div class="text-white">
+              <p class="text-sm font-semibold">99653-3223</p>
+              <p class="text-xs opacity-90">937-514-867</p>
+            </div>
+          </div>
+          
+          <div class="info-card flex items-center gap-2">
+            <i class="fas fa-envelope"></i>
+            <span class="text-white text-sm font-medium">netperu100@hotmail.com</span>
+          </div>
+          
+          <div class="info-card flex items-center gap-2">
+            <i class="fas fa-map-marker-alt"></i>
+            <span class="text-white text-sm font-medium">Lima, PERÚ</span>
+          </div>
+          
+          <div class="cisco-gif-container">
+            <img src="https://www.ds3comunicaciones.com/cisco/images/cisco-gif.gif" alt="Cisco" class="h-10" />
+          </div>
+        </div>
+
+        <!-- Botón de búsqueda -->
+        <button id="search-button" class="btn-search flex items-center gap-2">
+          <i class="fas fa-search"></i>
+          <span class="font-medium">Buscar</span>
+        </button>
+      </div>
+
+      <!-- Mobile Navbar -->
+      <div class="lg:hidden flex flex-col gap-3 py-3">
+        <!-- Navbar superior -->
+        <div class="flex justify-between items-center">
+          <!-- Logo y menú -->
+          <div class="flex items-center gap-3">
+            <button id="mobile-menu-button" class="btn-menu">
+              <i class="fas fa-bars text-white text-xl"></i>
+            </button>
+            
+            <div class="flex items-center gap-2">
+              <img
+                src="https://www.ds3comunicaciones.com/mikrotik/images/Logo1.jpg"
+                alt="DS3"
+                class="h-10"
+              />
+              <img
+                src="http://www.ds3comunicaciones.com/cisco/images/logo-cisco.gif"
+                alt="Cisco"
+                class="h-10"
+              />
+            </div>
+          </div>
+
+          <!-- Botón búsqueda -->
+          <button id="mobile-search-button" class="btn-search flex items-center gap-2 px-4 py-2">
+            <i class="fas fa-search"></i>
+            <span class="text-sm font-medium">Buscar</span>
+          </button>
+        </div>
+
+        <!-- Info bar móvil -->
+        <div class="mobile-info-bar space-y-1">
+          <div class="flex items-center gap-3 text-sm">
+            <div class="flex items-center gap-1">
+              <i class="fas fa-phone-alt text-blue-600"></i>
+              <span class="font-medium">996533223</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="fas fa-phone-alt text-blue-600"></i>
+              <span class="font-medium">994428965</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 text-sm">
+            <i class="fas fa-envelope text-teal-500"></i>
+            <span class="font-medium">netperu100@hotmail.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SUBMENU DE PRODUCTOS -->
+  <nav class="submenu-container animate-fade-in">
+    <div class="container mx-auto">
+      <div class="flex justify-evenly overflow-x-auto py-3 px-4 gap-2 scrollbar-hide">
+        
+        <a href="https://www.ds3comunicaciones.com/cisco/catalys_9200l.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-blue-50 rounded-lg">
+            <img src="./icons/Switch Catalyst.ico" class="max-h-full max-w-full" alt="Switch Catalyst" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Switch Catalyst</span>
+        </a>
+
+        <a href="https://www.ds3comunicaciones.com/cisco/bussines_sg350.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-teal-50 rounded-lg">
+            <img src="./icons/Cisco Business.ico" class="max-h-full max-w-full" alt="Cisco Business" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Cisco Business</span>
+        </a>
+
+        <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_switch_industrial_b.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-indigo-50 rounded-lg">
+            <img src="./icons/Switch Industrial.ico" class="max-h-full max-w-full" alt="Switch Industrial" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Switch Industrial</span>
+        </a>
+
+        <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_access_point_b.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-green-50 rounded-lg">
+            <svg width="32" height="32" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M21 42C32.598 42 42 32.598 42 21C42 9.40202 32.598 0 21 0C9.40202 0 0 9.40202 0 21C0 32.598 9.40202 42 21 42Z"
+                fill="white" stroke="#0066cc" stroke-width="2" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M27 21C27 24.3137 24.3137 27 21 27C17.6863 27 15 24.3137 15 21C15 17.6863 17.6863 15 21 15C24.3137 15 27 17.6863 27 21Z"
+                fill="#0066cc" />
+              <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M29 21C29 25.4183 25.4183 29 21 29C16.5817 29 13 25.4183 13 21C13 16.5817 16.5817 13 21 13C25.4183 13 29 16.5817 29 21Z"
+                fill="white" stroke="#0066cc" stroke-width="2" />
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Aironet</span>
+        </a>
+
+        <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_telefonos_b.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-purple-50 rounded-lg">
+            <img src="./icons/Télefono.ico" class="max-h-full max-w-full" alt="Teléfono" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Teléfono</span>
+        </a>
+
+        <a href="https://ds3comunicaciones.com/cisco/precios_cisco_meraki_b.html"
+          class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-pink-50 rounded-lg">
+            <img src="./icons/mariakii.ico" class="max-h-full max-w-full" alt="Meraki" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Meraki</span>
+        </a>
+
+        <a href="#" class="nav-item flex items-center p-2 gap-2 min-w-fit flex-shrink-0">
+          <div class="h-8 w-8 flex items-center justify-center bg-orange-50 rounded-lg">
+            <img src="./icons/Transceiver.ico" class="max-h-full max-w-full" alt="Transceiver" />
+          </div>
+          <span class="text-sm font-medium text-gray-700 whitespace-nowrap">Transceiver</span>
+        </a>
+        
+      </div>
+    </div>
+  </nav>
+
+  <!-- MENÚ MÓVIL LATERAL -->
+  <div id="menu-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden animate-fade-in"></div>
+  
+  <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 h-full w-80 z-50 transform -translate-x-full transition-transform duration-300 ease-out overflow-y-auto">
+    <!-- Header del menú -->
+    <div class="flex justify-between items-center p-6 border-b border-gray-700">
+      <h3 class="text-white text-xl font-bold">Menú</h3>
+      <button id="close-menu" class="text-white hover:text-teal-400 transition-colors">
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+    </div>
+    
+    <!-- Items del menú -->
+    <div class="py-4">
+      <a href="https://www.ds3comunicaciones.com/cisco/catalys_9200l.html" class="mobile-menu-item">
+        <i class="fas fa-network-wired text-teal-400"></i>
+        <span>Switch Catalyst</span>
+      </a>
+      
+      <a href="https://www.ds3comunicaciones.com/cisco/bussines_sg350.html" class="mobile-menu-item">
+        <i class="fas fa-building text-teal-400"></i>
+        <span>Cisco Business</span>
+      </a>
+      
+      <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_switch_industrial_b.html" class="mobile-menu-item">
+        <i class="fas fa-industry text-teal-400"></i>
+        <span>Switch Industrial</span>
+      </a>
+      
+      <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_access_point_b.html" class="mobile-menu-item">
+        <i class="fas fa-wifi text-teal-400"></i>
+        <span>Aironet</span>
+      </a>
+      
+      <a href="https://www.ds3comunicaciones.com/cisco/precios_cisco_telefonos_b.html" class="mobile-menu-item">
+        <i class="fas fa-phone text-teal-400"></i>
+        <span>Teléfono</span>
+      </a>
+      
+      <a href="https://ds3comunicaciones.com/cisco/precios_cisco_meraki_b.html" class="mobile-menu-item">
+        <i class="fas fa-cloud text-teal-400"></i>
+        <span>Meraki</span>
+      </a>
+      
+      <a href="#" class="mobile-menu-item">
+        <i class="fas fa-plug text-teal-400"></i>
+        <span>Transceiver</span>
+      </a>
+    </div>
+    
+    <!-- Footer del menú -->
+    <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-700">
+      <div class="text-white text-sm space-y-2">
+        <p class="flex items-center gap-2">
+          <i class="fas fa-map-marker-alt text-teal-400"></i>
+          Lima, PERÚ
+        </p>
+        <p class="flex items-center gap-2">
+          <i class="fas fa-envelope text-teal-400"></i>
+          netperu100@hotmail.com
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE BÚSQUEDA -->
+  <div id="search-modal" class="search-modal fixed inset-0 z-50 flex items-center justify-center hidden">
+    <div class="container mx-auto px-4 max-w-3xl">
+      <div class="search-input-container">
+        <div class="flex items-center gap-4 p-4">
+          <i class="fas fa-search text-blue-600 text-2xl"></i>
+          <input
+            type="text"
+            placeholder="Buscar productos, categorías..."
+            class="search-input flex-1"
+            autofocus
+          />
+          <button id="close-search" class="text-gray-400 hover:text-gray-600 transition-colors">
+            <i class="fas fa-times text-2xl"></i>
+          </button>
+        </div>
+        
+        <!-- Sugerencias de búsqueda -->
+        <div class="px-6 pb-6">
+          <p class="text-sm text-gray-500 mb-3">Búsquedas populares:</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm cursor-pointer hover:bg-blue-100 transition-colors">Switch Catalyst</span>
+            <span class="px-4 py-2 bg-teal-50 text-teal-700 rounded-full text-sm cursor-pointer hover:bg-teal-100 transition-colors">Access Point</span>
+            <span class="px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm cursor-pointer hover:bg-purple-100 transition-colors">Meraki</span>
+            <span class="px-4 py-2 bg-orange-50 text-orange-700 rounded-full text-sm cursor-pointer hover:bg-orange-100 transition-colors">Transceiver</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Menú móvil
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const closeMenuButton = document.getElementById('close-menu');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuOverlay = document.getElementById('menu-overlay');
+
+    function openMobileMenu() {
+      mobileMenu.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      
+      const icon = mobileMenuButton.querySelector('i');
+      icon.classList.remove('fa-bars');
+      icon.classList.add('fa-times');
+    }
+
+    function closeMobileMenu() {
+      mobileMenu.classList.add('-translate-x-full');
+      menuOverlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      
+      const icon = mobileMenuButton.querySelector('i');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+
+    mobileMenuButton.addEventListener('click', openMobileMenu);
+    closeMenuButton.addEventListener('click', closeMobileMenu);
+    menuOverlay.addEventListener('click', closeMobileMenu);
+
+    // Modal de búsqueda
+    const searchModal = document.getElementById('search-modal');
+    const searchButton = document.getElementById('search-button');
+    const mobileSearchButton = document.getElementById('mobile-search-button');
+    const closeSearch = document.getElementById('close-search');
+
+    function openSearchModal() {
+      searchModal.classList.remove('hidden');
+      searchModal.classList.add('animate-fade-in');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSearchModal() {
+      searchModal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    searchButton.addEventListener('click', openSearchModal);
+    mobileSearchButton.addEventListener('click', openSearchModal);
+    closeSearch.addEventListener('click', closeSearchModal);
+    
+    searchModal.addEventListener('click', function(e) {
+      if (e.target === searchModal) {
+        closeSearchModal();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSearchModal();
+        closeMobileMenu();
+      }
+    });
+  </script>
+
+</body>
+</html>
